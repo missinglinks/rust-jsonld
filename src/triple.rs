@@ -13,7 +13,7 @@ impl Triple {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Uri {
     uri: String
 }

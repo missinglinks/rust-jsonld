@@ -40,7 +40,7 @@ fn load_graph(data: &Value) -> Result<Graph, Error> {
         let value = map[property].as_str().unwrap();
         let triple = Triple::new(
             Uri::new(id),
-            Uri::new(property),
+            context.property(property),
             Entity::new(value));
         graph.add(triple);
     }

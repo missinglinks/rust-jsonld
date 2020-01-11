@@ -25,7 +25,6 @@ impl Context {
                 // load and parse context file
                 let context_file = fetch_json(uri)
                     .expect("Error retrieving context file");
-                //println!("{:?}", context_file);
                 
                 let map = context_file["@context"].as_object().unwrap();
                 for (key, value) in map {
@@ -35,6 +34,19 @@ impl Context {
                                 String::from(key), 
                                 Property::new(Uri::new(uri), PropertyType::Id));
                         },
+                        Value::Object(obj) => {
+                            let prop_type = match obj["@type"].as_str().unwrap() {
+                                "@id" => PropertyType::Id,
+                                "xsd:date" => PropertyType::Date,
+                                _ => PropertyType::Undefined
+                            };                            
+
+                            self.properties.insert(
+                                String::from(key), 
+                                Property::new(
+                                    Uri::new(obj["@id"].as_str().unwrap()), 
+                                    prop_type));
+                        }
                         _ => ()
                     }
 
@@ -51,7 +63,10 @@ impl Context {
 
     }
 
-
+    pub fn property(&self, property: &str) -> Uri {
+        println!("{}", property);
+        self.properties[property].uri()
+    }
 }
 
 #[derive(Debug)]
@@ -66,10 +81,16 @@ impl Property {
             uri, prop_type
         }
     }
+
+    pub fn uri(&self) -> Uri {
+        self.uri.clone()
+    }
 }
+
 
 #[derive(Debug)]
 pub enum PropertyType {
     Id,
     Date,
+    Undefined
 }
