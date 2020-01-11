@@ -19,32 +19,78 @@ async fn fetch_json() -> Result<Value, Error> {
 
 #[derive(Debug)]
 struct Graph {
-    graph: Vec<Triple>
-};
+    g: Vec<Triple>
+}
+
+impl Graph {
+    pub fn new() -> Graph {
+        Graph {
+            g: Vec::new()
+        }
+    }
+
+    pub fn add(&mut self, triple: Triple) {
+        self.g.push(triple);
+    }
+}
+
 
 #[derive(Debug)]
 struct Triple {
-    s: String,
-    p: String,
-    o: String
+    s: Uri,
+    p: Uri,
+    o: Entity
 }
 
-fn load_graph(data: &Value) -> Graph {
+impl Triple {
+    pub fn new(s: Uri, p: Uri, o: Entity) -> Triple {
+        Triple {
+            s, p, o
+        }
+    }
+}
+
+#[derive(Debug)]
+struct Uri(String);
+
+#[derive(Debug)]
+enum Entity {
+    Uri(Uri),
+    Literal(String)
+}
+
+
+fn load_graph(data: &Value) -> Result<Graph, Error> {
 
     println!("{}", data);
 
     let map = data.as_object().unwrap();
     
+    let mut id: String = String::from("");
+    let mut properties: Vec<String> = Vec::new();
+    
     for key in map.keys() {
 
         match key.as_ref() {
             "@context" => { println!("context") },
-            "@id" => { println!("id ^^") },
-            _ => { println!("key {}", key) }
+            "@id" => { id = map[&String::from(key)].to_string() },
+            _ => { properties.push(String::from(key)) }
         };
     }
 
-    return Graph(String::from("abc"))
+    println!("{}", id);
+    println!("{:?}", properties);
+
+    let mut graph = Graph::new();
+
+    let triple = Triple::new(
+        Uri(String::from("abv")),
+        Uri(String::from("pred")),
+        Entity::Literal(String::from("adsd")));
+
+    graph.add(triple);
+
+    return Ok(graph)
 }
 
 fn main() {
@@ -56,7 +102,7 @@ fn main() {
     let context_file = &data["@context"];
     println!("{:?}", context_file);
 
-    let g = load_graph(&data);
+    let g = load_graph(&data).expect("error loading graph");
     println!("{:?}", g);
     
 }
