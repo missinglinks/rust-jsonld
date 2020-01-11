@@ -2,6 +2,12 @@ use std::fs;
 use serde_json::{Value};
 use reqwest::Error;
 
+mod triple;
+use triple::{Triple, Uri, Entity};
+
+mod graph;
+use graph::Graph;
+
 #[tokio::main]
 async fn fetch_json() -> Result<Value, Error> {
     let response = reqwest::get("https://json-ld.org/contexts/person.jsonld")
@@ -17,60 +23,16 @@ async fn fetch_json() -> Result<Value, Error> {
     Ok(data)
 }
 
-#[derive(Debug)]
-struct Graph {
-    g: Vec<Triple>
-}
-
-impl Graph {
-    pub fn new() -> Graph {
-        Graph {
-            g: Vec::new()
-        }
-    }
-
-    pub fn add(&mut self, triple: Triple) {
-        self.g.push(triple);
-    }
-}
-
-
-#[derive(Debug)]
-struct Triple {
-    s: Uri,
-    p: Uri,
-    o: Entity
-}
-
-impl Triple {
-    pub fn new(s: Uri, p: Uri, o: Entity) -> Triple {
-        Triple {
-            s, p, o
-        }
-    }
-}
-
-#[derive(Debug)]
-struct Uri(String);
-
-#[derive(Debug)]
-enum Entity {
-    Uri(Uri),
-    Literal(String)
-}
-
-
 fn load_graph(data: &Value) -> Result<Graph, Error> {
 
     println!("{}", data);
 
+    // read needed information (id and properties) from json object
     let map = data.as_object().unwrap();
-    
     let mut id: String = String::from("");
     let mut properties: Vec<String> = Vec::new();
     
     for key in map.keys() {
-
         match key.as_ref() {
             "@context" => { println!("context") },
             "@id" => { id = map[&String::from(key)].to_string() },
@@ -78,17 +40,17 @@ fn load_graph(data: &Value) -> Result<Graph, Error> {
         };
     }
 
-    println!("{}", id);
-    println!("{:?}", properties);
-
+    // create triples for each statement
     let mut graph = Graph::new();
-
-    let triple = Triple::new(
-        Uri(String::from("abv")),
-        Uri(String::from("pred")),
-        Entity::Literal(String::from("adsd")));
-
-    graph.add(triple);
+    for property in properties {
+        let value = map[&property].to_string();
+        let triple = Triple::new(
+            Uri::new(&id),
+            Uri::new(&property),
+            Entity::Uri(Uri::new(&value))
+        );
+        graph.add(triple);
+    }
 
     return Ok(graph)
 }
