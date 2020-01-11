@@ -29,26 +29,25 @@ fn load_graph(data: &Value) -> Result<Graph, Error> {
 
     // read needed information (id and properties) from json object
     let map = data.as_object().unwrap();
-    let mut id: String = String::from("");
-    let mut properties: Vec<String> = Vec::new();
+    let mut id: &str = "";
+    let mut properties: Vec<&str> = Vec::new();
     
     for key in map.keys() {
         match key.as_ref() {
             "@context" => { println!("context") },
-            "@id" => { id = map[&String::from(key)].to_string() },
-            _ => { properties.push(String::from(key)) }
+            "@id" => { id = map[key].as_str().unwrap() },
+            _ => { properties.push(key) }
         };
     }
 
     // create triples for each statement
     let mut graph = Graph::new();
     for property in properties {
-        let value = map[&property].to_string();
+        let value = map[property].as_str().unwrap();
         let triple = Triple::new(
-            Uri::new(&id),
-            Uri::new(&property),
-            Entity::Uri(Uri::new(&value))
-        );
+            Uri::new(id),
+            Uri::new(property),
+            Entity::new(value));
         graph.add(triple);
     }
 
