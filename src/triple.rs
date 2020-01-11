@@ -34,7 +34,7 @@ pub enum Entity {
 
 impl Entity {
     pub fn new(s: &str) -> Entity {
-        if s.starts_with("\"http") {
+        if s.starts_with("http") {
             return Entity::Uri(Uri::new(s))
         }
         else {

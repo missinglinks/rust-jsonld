@@ -8,20 +8,11 @@ use triple::{Triple, Uri, Entity};
 mod graph;
 use graph::Graph;
 
-#[tokio::main]
-async fn fetch_json() -> Result<Value, Error> {
-    let response = reqwest::get("https://json-ld.org/contexts/person.jsonld")
-        .await?
-        .text()
-        .await?;
-    println!("{:?}", response);
+mod context;
+use context::Context;
 
-    let data: Value = serde_json::from_str(&response)
-        .expect("error parsing json");
-    println!("{:?}", data);
+mod helpers;
 
-    Ok(data)
-}
 
 fn load_graph(data: &Value) -> Result<Graph, Error> {
 
@@ -31,14 +22,17 @@ fn load_graph(data: &Value) -> Result<Graph, Error> {
     let map = data.as_object().unwrap();
     let mut id: &str = "";
     let mut properties: Vec<&str> = Vec::new();
+    let mut context = Context::new();
     
     for key in map.keys() {
         match key.as_ref() {
-            "@context" => { println!("context") },
+            "@context" => { context.load(&map[key]) },
             "@id" => { id = map[key].as_str().unwrap() },
             _ => { properties.push(key) }
         };
     }
+
+    println!("CONTEXT {:?}", context);
 
     // create triples for each statement
     let mut graph = Graph::new();
