@@ -7,8 +7,7 @@ use crate::helpers::fetch_json;
 #[derive(Debug)] 
 pub struct Context {
     namespaces: HashMap<String, Namespace>,
-    terms: HashMap<String, Term>,
-    properties: HashMap<String, Property>
+    terms: HashMap<String, Term>
 }
 
 impl Context {
@@ -16,12 +15,12 @@ impl Context {
     pub fn new() -> Context {
         Context {
             namespaces: HashMap::new(),
-            terms: HashMap::new(),
-            properties: HashMap::new()
+            terms: HashMap::new()
         }
     }
     
     fn _parse_context(&mut self, context_map: &Map<String, Value>) {
+
         for (key, value) in context_map {
             match value {
                 Value::String(uri) => {
@@ -30,30 +29,31 @@ impl Context {
                     match last_char {
                         '#' | '/' => {
                             // add entry to namespaces
-                            println!("namespace")
+                            self.namespaces.insert(
+                                String::from(key),
+                                Namespace::new(Uri::new(uri), String::from(key))
+                            );
                         },
                         _ => { 
-                            // entry is term, deal with it later
-                            println!("term")
+                            // entry is term, deal with it
+                            self.terms.insert(
+                                String::from(key),
+                                Term::new(Uri::new(uri), String::from(key))
+                            );
                         }
                     }
-
-                    self.properties.insert(
-                        String::from(key), 
-                        Property::new(Uri::new(uri), PropertyType::Id));
                 },
                 Value::Object(obj) => {
+                    /*
                     let prop_type = match obj["@type"].as_str().unwrap() {
                         "@id" => PropertyType::Id,
                         "xsd:date" => PropertyType::Date,
                         _ => PropertyType::Undefined
-                    };                            
-
-                    self.properties.insert(
-                        String::from(key), 
-                        Property::new(
-                            Uri::new(obj["@id"].as_str().unwrap()), 
-                            prop_type));
+                    };*/
+                    self.terms.insert(
+                        String::from(key),
+                        Term::new(Uri::new(obj["@id"].as_str().unwrap()), String::from(key))
+                    );
                 }
                 _ => ()
             }
@@ -85,35 +85,9 @@ impl Context {
 
     }
 
-    pub fn property(&self, property: &str) -> Uri {
-        self.properties[property].uri()
+    pub fn term(&self, alias: &str) -> Uri {
+        self.terms[alias].uri()
     }
-}
-
-#[derive(Debug)]
-pub struct Property {
-    uri: Uri,
-    prop_type: PropertyType
-}
-
-impl Property {
-    pub fn new(uri: Uri, prop_type: PropertyType) -> Property {
-        Property {
-            uri, prop_type
-        }
-    }
-
-    pub fn uri(&self) -> Uri {
-        self.uri.clone()
-    }
-}
-
-
-#[derive(Debug)]
-pub enum PropertyType {
-    Id,
-    Date,
-    Undefined
 }
 
 #[derive(Debug)]
@@ -122,8 +96,32 @@ pub struct Namespace {
     alias: String
 }
 
+impl Namespace {
+    pub fn new(uri: Uri, alias: String) -> Namespace {
+        Namespace {
+            uri, alias
+        }
+    }
+
+    pub fn uri(&self) -> Uri {
+        self.uri.clone()
+    }    
+}
+
 #[derive(Debug)]
 pub struct Term {
     uri: Uri,
     term: String
+}
+
+impl Term {
+    pub fn new(uri: Uri, term: String) -> Term {
+        Term {
+            uri, term
+        }
+    }
+
+    pub fn uri(&self) -> Uri {
+        self.uri.clone()
+    }
 }

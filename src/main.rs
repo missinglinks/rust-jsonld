@@ -50,7 +50,7 @@ impl JsonLDFile {
             let value = map[property].as_str().unwrap();
             let triple = Triple::new(
                 Uri::new(id),
-                context.property(property),
+                context.term(property),
                 Entity::new(value));
             graph.add(triple);
         }
