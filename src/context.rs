@@ -6,7 +6,7 @@ use crate::helpers::fetch_json;
 
 #[derive(Debug)] 
 pub struct Context {
-    namespaces: HashMap<String, Namespace>,
+    namespaces: HashMap<String, Uri>,
     terms: HashMap<String, Term>
 }
 
@@ -21,6 +21,8 @@ impl Context {
     
     fn _parse_context(&mut self, context_map: &Map<String, Value>) {
 
+        let mut tmp_terms = Vec::new();
+
         for (key, value) in context_map {
             match value {
                 Value::String(uri) => {
@@ -31,39 +33,36 @@ impl Context {
                             // add entry to namespaces
                             self.namespaces.insert(
                                 String::from(key),
-                                Namespace::new(Uri::new(uri), String::from(key))
+                                Uri::new(uri)
                             );
                         },
                         _ => { 
-                            // entry is term, deal with it
-                            self.terms.insert(
-                                String::from(key),
-                                Term::new(Uri::new(uri), String::from(key))
-                            );
+                            tmp_terms.push((String::from(key), String::from(uri), String::from("@id")));
                         }
                     }
                 },
                 Value::Object(obj) => {
-                    /*
-                    let prop_type = match obj["@type"].as_str().unwrap() {
-                        "@id" => PropertyType::Id,
-                        "xsd:date" => PropertyType::Date,
-                        _ => PropertyType::Undefined
-                    };*/
-                    self.terms.insert(
-                        String::from(key),
-                        Term::new(Uri::new(obj["@id"].as_str().unwrap()), String::from(key))
-                    );
+                    tmp_terms.push((
+                        String::from(key), 
+                        String::from(obj["@id"].as_str().unwrap()),
+                        String::from(obj["@type"].as_str().unwrap())
+                    ));
                 }
                 _ => ()
             }
         }          
+
+        for (alias, uri, data_type) in tmp_terms {
+            self.terms.insert(
+                alias,
+                Term::new(Uri::new(&uri), DataType::Id)
+            );
+        }
+
     }
     
 
     pub fn load(&mut self, context_obj: &Value) {
-        //let mut properties: HashMap<String, Property> = HashMap::new();
-
         match context_obj {
             Value::String(uri) => { 
                 // load and parse context file
@@ -82,7 +81,6 @@ impl Context {
             },
             _ => ()
         }
-
     }
 
     pub fn term(&self, alias: &str) -> Uri {
@@ -91,37 +89,25 @@ impl Context {
 }
 
 #[derive(Debug)]
-pub struct Namespace {
-    uri: Uri,
-    alias: String
-}
-
-impl Namespace {
-    pub fn new(uri: Uri, alias: String) -> Namespace {
-        Namespace {
-            uri, alias
-        }
-    }
-
-    pub fn uri(&self) -> Uri {
-        self.uri.clone()
-    }    
-}
-
-#[derive(Debug)]
 pub struct Term {
     uri: Uri,
-    term: String
+    data_type: DataType
 }
 
 impl Term {
-    pub fn new(uri: Uri, term: String) -> Term {
+    pub fn new(uri: Uri, data_type: DataType) -> Term {
         Term {
-            uri, term
+            uri, data_type
         }
     }
 
     pub fn uri(&self) -> Uri {
         self.uri.clone()
     }
+}
+
+#[derive(Debug)]
+pub enum DataType {
+    Id, 
+    Literal(Uri)
 }
