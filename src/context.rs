@@ -6,6 +6,8 @@ use crate::helpers::fetch_json;
 
 #[derive(Debug)] 
 pub struct Context {
+    namespaces: HashMap<String, Namespace>,
+    terms: HashMap<String, Term>,
     properties: HashMap<String, Property>
 }
 
@@ -13,6 +15,8 @@ impl Context {
 
     pub fn new() -> Context {
         Context {
+            namespaces: HashMap::new(),
+            terms: HashMap::new(),
             properties: HashMap::new()
         }
     }
@@ -21,6 +25,19 @@ impl Context {
         for (key, value) in context_map {
             match value {
                 Value::String(uri) => {
+                    let last_char = uri.chars().nth(uri.len()-1).unwrap();
+                    
+                    match last_char {
+                        '#' | '/' => {
+                            // add entry to namespaces
+                            println!("namespace")
+                        },
+                        _ => { 
+                            // entry is term, deal with it later
+                            println!("term")
+                        }
+                    }
+
                     self.properties.insert(
                         String::from(key), 
                         Property::new(Uri::new(uri), PropertyType::Id));
@@ -97,4 +114,16 @@ pub enum PropertyType {
     Id,
     Date,
     Undefined
+}
+
+#[derive(Debug)]
+pub struct Namespace {
+    uri: Uri,
+    alias: String
+}
+
+#[derive(Debug)]
+pub struct Term {
+    uri: Uri,
+    term: String
 }
