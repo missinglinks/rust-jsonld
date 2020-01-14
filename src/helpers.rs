@@ -7,11 +7,9 @@ pub async fn fetch_json(url: &str) -> Result<Value, Error> {
         .await?
         .text()
         .await?;
-    println!("{:?}", response);
 
     let data: Value = serde_json::from_str(&response)
         .expect("error parsing json");
-    println!("{:?}", data);
 
     Ok(data)
 }

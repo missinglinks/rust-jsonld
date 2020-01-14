@@ -1,0 +1,244 @@
+{
+  "@context": {
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "provit": "http://vocab.ub.uni-leipzig.de/provit/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/source2_zip/0d7cd1f40c9a47ea9025271ea6084030",
+      "@type": "prov:Entity",
+      "prov:atLocation": "/home/pmuehleder/data/provit_test/source2.zip",
+      "prov:hadPrimarySource": {
+        "@id": "provit:youtube"
+      },
+      "prov:wasAttributedTo": {
+        "@id": "provit:pyg_0.4"
+      },
+      "prov:wasGeneratedBy": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/fetch_yt_channel/b9f223be399547a6bc1671aa7701eb8a"
+      }
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/social_network_analysis/70520de6465d4940985b13840bc84562",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-01-27T15:11:04.97"
+      },
+      "rdfs:label": "Social network analysis of YouTube users in channel <ABC>"
+    },
+    {
+      "@id": "provit:youtube",
+      "@type": [
+        "prov:Organization",
+        "prov:PrimarySource",
+        "prov:Agent"
+      ],
+      "foaf:homepage": "https://www.youtube.com",
+      "foaf:name": "Youtube"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/social_network_analysis/ccb0b4b54b5f409cba90e06b30b18e54",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-02-01T15:14:30.49"
+      },
+      "rdfs:label": "Social network analysis of YouTube users in channel <ABC>"
+    },
+    {
+      "@id": "provit:gephi_0.9.2",
+      "@type": [
+        "prov:Agent",
+        "prov:SoftwareAgent"
+      ],
+      "foaf:homepage": "https://gephi.org/",
+      "foaf:name": "Gephi",
+      "schema:softwareVersion": "0.9.2"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/source_zip/983d63f467454f31b77fc976fef369fb",
+      "@type": "prov:Entity",
+      "prov:atLocation": "/home/pmuehleder/data/provit_test/source.zip",
+      "prov:hadPrimarySource": {
+        "@id": "provit:youtube"
+      },
+      "prov:wasAttributedTo": {
+        "@id": "provit:pyg_0.4"
+      },
+      "prov:wasGeneratedBy": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/fetch_channel/018831abf601434c8f8a601d35737f9d"
+      }
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/generate_network/cd245cee2077426fa25225efa2879da6",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-01-22T14:32:05.53"
+      },
+      "rdfs:label": "Build user network graph of channel <ABC>"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/analysis_gephi/cecfa8ab8a0443db9a816597321e1dd4",
+      "@type": "prov:Entity",
+      "prov:atLocation": "/home/pmuehleder/data/provit_test/analysis.gephi",
+      "prov:wasAttributedTo": [
+        {
+          "@id": "provit:gephi_0.9.2"
+        },
+        {
+          "@id": "provit:pmuehleder"
+        }
+      ],
+      "prov:wasDerivedFrom": [
+        {
+          "@id": "http://vocab.ub.uni-leipzig.de/provit/network2_zip/197a3ba849c8488cb340373c28a8d607"
+        },
+        {
+          "@id": "http://vocab.ub.uni-leipzig.de/provit/analysis_gephi/c84030b17ab24f3293e3710384f0bebc"
+        }
+      ],
+      "prov:wasGeneratedBy": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/social_network_analysis/ccb0b4b54b5f409cba90e06b30b18e54"
+      }
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/fetch_channel/018831abf601434c8f8a601d35737f9d",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-01-11T14:31:19.70"
+      },
+      "rdfs:label": "Fetch all video and comment data of channel <ABC> via the YouTube Data API"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/fetch_yt_channel/b9f223be399547a6bc1671aa7701eb8a",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-01-01T13:39:10.54"
+      },
+      "rdfs:label": "Fetched all video and comment data of channel <XY> via the YouTube Data API"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/network2_zip/197a3ba849c8488cb340373c28a8d607",
+      "@type": "prov:Entity",
+      "prov:atLocation": "/home/pmuehleder/data/provit_test/network2.zip",
+      "prov:wasAttributedTo": {
+        "@id": "provit:pyg_0.4"
+      },
+      "prov:wasDerivedFrom": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/source_zip/983d63f467454f31b77fc976fef369fb"
+      },
+      "prov:wasGeneratedBy": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/generate_network/cd245cee2077426fa25225efa2879da6"
+      }
+    },
+    {
+      "@id": "provit:pmuehleder",
+      "@type": [
+        "prov:Agent",
+        "prov:Person"
+      ],
+      "foaf:homepage": [
+        "https://github.com/missinglinks",
+        "https://diggr.link"
+      ],
+      "foaf:mbox": [
+        "peter.muehleder@yahoo.de",
+        "peter.muehleder@uni-leipzig.de"
+      ],
+      "foaf:member": {
+        "@id": "provit:ubleipzig"
+      },
+      "foaf:name": [
+        "Peter S. Mühleder",
+        "Peter Mühleder",
+        "P. Mühleder"
+      ]
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/social_network_analysis/b669ad27bab34854b8edcb0ccc50fff3",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-02-01T14:29:32.90"
+      },
+      "rdfs:label": "Social network analysis"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/analysis_gephi/c84030b17ab24f3293e3710384f0bebc",
+      "@type": "prov:Entity",
+      "prov:atLocation": "/home/pmuehleder/data/provit_test/analysis.gephi",
+      "prov:wasAttributedTo": [
+        {
+          "@id": "provit:gephi_0.9.2"
+        },
+        {
+          "@id": "provit:pmuehleder"
+        }
+      ],
+      "prov:wasDerivedFrom": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/network_graphml/11b65ad533f746d2a29d4fb167610d0a"
+      },
+      "prov:wasGeneratedBy": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/social_network_analysis/b669ad27bab34854b8edcb0ccc50fff3"
+      }
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/network_graphml/11b65ad533f746d2a29d4fb167610d0a",
+      "@type": "prov:Entity",
+      "prov:atLocation": "/home/pmuehleder/data/provit_test/network.graphml",
+      "prov:wasAttributedTo": {
+        "@id": "provit:pyg_0.4"
+      },
+      "prov:wasDerivedFrom": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/source2_zip/0d7cd1f40c9a47ea9025271ea6084030"
+      },
+      "prov:wasGeneratedBy": {
+        "@id": "http://vocab.ub.uni-leipzig.de/provit/generate_network/327da945373d4bfd92895fb4cb23db7a"
+      }
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/social_network_analysis/30abed413bec4e3ebf91589373c5a122",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-02-01T14:32:42.66"
+      },
+      "rdfs:label": "Social network analysis of YouTube users"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/generate_network/327da945373d4bfd92895fb4cb23db7a",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-01-15T14:28:09.35"
+      },
+      "rdfs:label": "Generated user network of channel <XY> for social network analysis"
+    },
+    {
+      "@id": "http://vocab.ub.uni-leipzig.de/provit/test/b5e99884dd8c40a2b70b9cf103fbb639",
+      "@type": "prov:Activity",
+      "prov:endedAtTime": {
+        "@type": "xsd:dateTime",
+        "@value": "2019-02-25T09:49:27.02"
+      },
+      "rdfs:label": "test"
+    },
+    {
+      "@id": "provit:pyg_0.4",
+      "@type": [
+        "prov:SoftwareAgent",
+        "prov:Agent"
+      ],
+      "foaf:homepage": "https://github.com/diggr/pyg",
+      "foaf:name": "pyg - passable youtube grabber",
+      "schema:softwareVersion": "0.4"
+    }
+  ]
+}

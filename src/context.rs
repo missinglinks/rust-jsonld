@@ -1,4 +1,4 @@
-use serde_json::{Value};
+use serde_json::{Value, Map};
 use std::collections::HashMap;
 
 use crate::triple::Uri;
@@ -16,6 +16,33 @@ impl Context {
             properties: HashMap::new()
         }
     }
+    
+    fn _parse_context(&mut self, context_map: &Map<String, Value>) {
+        for (key, value) in context_map {
+            match value {
+                Value::String(uri) => {
+                    self.properties.insert(
+                        String::from(key), 
+                        Property::new(Uri::new(uri), PropertyType::Id));
+                },
+                Value::Object(obj) => {
+                    let prop_type = match obj["@type"].as_str().unwrap() {
+                        "@id" => PropertyType::Id,
+                        "xsd:date" => PropertyType::Date,
+                        _ => PropertyType::Undefined
+                    };                            
+
+                    self.properties.insert(
+                        String::from(key), 
+                        Property::new(
+                            Uri::new(obj["@id"].as_str().unwrap()), 
+                            prop_type));
+                }
+                _ => ()
+            }
+        }          
+    }
+    
 
     pub fn load(&mut self, context_obj: &Value) {
         //let mut properties: HashMap<String, Property> = HashMap::new();
@@ -27,36 +54,14 @@ impl Context {
                     .expect("Error retrieving context file");
                 
                 let map = context_file["@context"].as_object().unwrap();
-                for (key, value) in map {
-                    match value {
-                        Value::String(uri) => {
-                            self.properties.insert(
-                                String::from(key), 
-                                Property::new(Uri::new(uri), PropertyType::Id));
-                        },
-                        Value::Object(obj) => {
-                            let prop_type = match obj["@type"].as_str().unwrap() {
-                                "@id" => PropertyType::Id,
-                                "xsd:date" => PropertyType::Date,
-                                _ => PropertyType::Undefined
-                            };                            
-
-                            self.properties.insert(
-                                String::from(key), 
-                                Property::new(
-                                    Uri::new(obj["@id"].as_str().unwrap()), 
-                                    prop_type));
-                        }
-                        _ => ()
-                    }
-
-                }
-
-
+                self._parse_context(&map);
             },
             Value::Object(obj) => { 
                 // parse context object
+                println!("context object");
+                println!("{:?}", obj);
 
+                self._parse_context(&obj);
             },
             _ => ()
         }
@@ -64,7 +69,6 @@ impl Context {
     }
 
     pub fn property(&self, property: &str) -> Uri {
-        println!("{}", property);
         self.properties[property].uri()
     }
 }
